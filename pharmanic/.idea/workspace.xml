@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="0c74d4e1-523f-4fa8-8565-6cbdcb53c04c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pharmanic_app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/pharmanic_app/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pharmanic_app/static/app/js/myscript.js" beforeDir="false" afterPath="$PROJECT_DIR$/pharmanic_app/static/app/js/myscript.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pharmanic_app/templates/app/address.html" beforeDir="false" afterPath="$PROJECT_DIR$/pharmanic_app/templates/app/address.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pharmanic_app/templates/app/addtocart.html" beforeDir="false" afterPath="$PROJECT_DIR$/pharmanic_app/templates/app/addtocart.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pharmanic_app/templates/app/checkout.html" beforeDir="false" afterPath="$PROJECT_DIR$/pharmanic_app/templates/app/checkout.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pharmanic_app/templates/app/orders.html" beforeDir="false" afterPath="$PROJECT_DIR$/pharmanic_app/templates/app/orders.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pharmanic_app/templates/app/productdetail.html" beforeDir="false" afterPath="$PROJECT_DIR$/pharmanic_app/templates/app/productdetail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pharmanic_app/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/pharmanic_app/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pharmanic_app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/pharmanic_app/views.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="1zS2u8av4DA27bLGyIlfEbbC4Cf" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0c74d4e1-523f-4fa8-8565-6cbdcb53c04c" name="Default Changelist" comment="" />
+      <created>1634127401005</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1634127401005</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

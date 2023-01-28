@@ -1,0 +1,41 @@
+.owl-carousel .item{
+ /* border: 1px solid black; */
+ font-size: 20px;
+ text-align: center;
+ margin-top: 10px;;
+}
+
+.owl-next{
+ float:right;
+}
+.owl-prev{
+ float:left;
+}
+.owl-prev span{
+ font-size: 24px;
+ font-weight: bold;
+}
+
+.owl-next span{
+ font-size: 24px;
+ font-weight: bold;
+}
+
+.navColor{
+  background-color: #10847E;
+}
+
+
+.buttonColor{
+  background-color: #ffc107;
+}
+
+.hoverColor:hover{
+  background-color: #ffc107;
+}
+
+.sizeImage{
+  width: 150px;
+  height: 100px;
+  align-items: center;
+}

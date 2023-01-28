@@ -1,0 +1,42 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Order with Prescription{% endblock title %}
+{% block main-content %}
+<center>
+<div class="container my-5">
+     <div class="row">
+        <h3 class="text-center">Upload Prescription</h3>
+        <br><br><br>
+        <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <a href="{% url 'orderwithprescription' %}" class="btn">
+            <div class="item">
+                <img src="{% static 'app/images/orderwithprescription.png' %}" width="200px"alt="" >
+            </div>
+        </a>
+        {{ fm.as_p }}
+        
+		<input type="submit">
+        </form>
+        <center>
+            <br>
+            {{ msg }}
+        </center>
+        <!-- <a href="" class="btn">
+            <div class="item">
+                <img src="{% static 'app/images/orderwithprescription.png' %}" width="200px"alt="" >
+            </div>
+        </a> -->
+        <!-- <div class="text-center">
+            <img src="{% static 'app/images/valid_prescription.png' %}" alt=""class="img-fluid img-thumbnail w-25">
+        </div> -->
+        <div class="text-center">
+            <br><br>
+            <img src="{% static 'app/images/prescription_rules.png' %}" alt="" width=60%>
+        </div>
+</div>
+
+     </div>
+</div>
+</center>
+{% endblock main-content %}
