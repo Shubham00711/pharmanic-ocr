@@ -77,7 +77,7 @@ def orderwithprescription(request):
         f = FileForm(request.POST, request.FILES)
         if f.is_valid():
             img = request.FILES
-            print(img)
+            # print(img)
             if(len(FileModel.objects.filter(file=img['file']))) != 0:
                 c = FileModel.objects.get(file=img['file'])
                 c.file.delete()
@@ -85,11 +85,26 @@ def orderwithprescription(request):
                 
             f.save()
             img_path = './media/' + str(img['file'])
-            print(img_path)
-            text = visionapi(img_path)
+            # print(img_path)
+            res = visionapi(img_path)
+            text = []
+            for i in res:
+                if len(i) > 2 and not i.isdigit():
+                    text.append(i)
+            print(text)
+            search = Product.objects.none()
+            # print(search)
+            for i in text:
+                search |= Product.objects.filter(Q(title__icontains=i) & Q(category='TC'))
+            # for i in search:
+            #     print(i.title)
 
-            fm = FileForm()
-            return render(request, "app/orderwithprescription.html", {'fm':fm, 'msg':text})
+            totalitem = 0
+            if request.user.is_authenticated:
+                totalitem = len(Cart.objects.filter(user=request.user))
+            return render(request, 'app/prescription_medicines.html', {'prescription_medicines': search,'totalitem': totalitem})
+            # fm = FileForm()
+            # return render(request, "app/orderwithprescription.html", {'fm':fm, 'msg':text})
         else:
             return render(request, "app/orderwithprescription.html", {'fm':f, 'msg':'Check Errors!'})
     else:
