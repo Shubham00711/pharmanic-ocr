@@ -58,7 +58,7 @@ def remove_non_ascii(text):
     return unidecode(str(text, encoding = "utf-8"))
 
 def visionapi(img):    
-    api_key = "AIzaSyBRB_d6Ahac8EfQPklTo6uKPCFDICrVDdg"
+    api_key = "AIzaSyCmVndYRVeskgFSBI7v1YXlFc218txz47k"
     image_filenames = img
     response = request_ocr(api_key, image_filenames)
     # print(type(response))
@@ -352,6 +352,7 @@ def checkout(request):
     amount = 0.0
     shipping_amount = 70.0
     totalamount = 0.0
+    dollaramount = 0.0
     cart_product = [p for p in Cart.objects.all() if p.user == request.user]
     if cart_product:
         for p in cart_product:
@@ -363,7 +364,8 @@ def checkout(request):
         return redirect(show_cart)
     if request.user.is_authenticated:
         totalitem = len(Cart.objects.filter(user=request.user))
-    return render(request, 'app/checkout.html', {'add':add, 'totalamount':totalamount, 'cart_items': cart_items,'totalitem': totalitem})
+    dollaramount = totalamount/82.49
+    return render(request, 'app/checkout.html', {'add':add, 'totalamount':totalamount, 'dollaramount': dollaramount, 'cart_items': cart_items,'totalitem': totalitem})
 
 @login_required
 def payment_done(request):
