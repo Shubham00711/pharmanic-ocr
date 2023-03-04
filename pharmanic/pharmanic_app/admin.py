@@ -18,7 +18,7 @@ class CustomerModelAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductModelAdmin(admin.ModelAdmin):
-	list_display = ['id', 'title', 'selling_price', 'discounted_price', 'description', 'brand', 'category', 'product_image']
+	list_display = ['id', 'title', 'searchname','selling_price', 'discounted_price', 'description', 'brand', 'category', 'product_image']
 
 @admin.register(Cart)
 class CartModelAdmin(admin.ModelAdmin):
@@ -44,7 +44,9 @@ class ViewCountModelAdmin(admin.ModelAdmin):
 class CartCountModelAdmin(admin.ModelAdmin):
 	list_display = ['id', 'pname', 'count']
 	
-admin.site.register(Rating)
+@admin.register(Rating)
+class RatingModelAdmin(admin.ModelAdmin):
+	list_display = ['id', 'userid', 'pname', 'p_category', 'rating']
 
 @admin.register(FileModel)
 class FileModelAdmin(admin.ModelAdmin):

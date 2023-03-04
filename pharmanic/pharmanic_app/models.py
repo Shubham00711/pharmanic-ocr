@@ -64,6 +64,7 @@ CATEGORY_CHOICES = (
 
 class Product(models.Model):
 	title = models.CharField(max_length=100)
+	searchname = models.CharField(max_length=100, blank=True)
 	selling_price = models.FloatField()
 	discounted_price = models.FloatField()
 	description = models.TextField()

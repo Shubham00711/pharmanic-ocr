@@ -95,7 +95,7 @@ def orderwithprescription(request):
             search = Product.objects.none()
             # print(search)
             for i in text:
-                search |= Product.objects.filter(Q(title__icontains=i) & Q(category='TC'))
+                search |= Product.objects.filter(Q(searchname__icontains=i) & Q(category='TC'))
             # for i in search:
             #     print(i.title)
 
@@ -137,21 +137,58 @@ class ProductDetailView(View):
         totalitem = 0
         product = Product.objects.get(pk=pk)
         pname = product.title
-        #print(pname)
+        ordered = False
         item_already_in_cart = False
-        if request.user.is_authenticated:
-            if len(ViewCount.objects.filter(pname=pname))!=0:
+        rating = 0
+        if len(ViewCount.objects.filter(pname=pname))!=0:
                 count=ViewCount.objects.filter(pname=pname)[0].count+1
                 ViewCount.objects.filter(pname=pname).update(count=count)
-            else:
-                obj=ViewCount(pname=pname,count=1)
-                obj.save()
-                
+        else:
+            obj=ViewCount(pname=pname,count=1)
+            obj.save()
+
+        if request.user.is_authenticated:   
+            id = request.user.id
+            obj1 = Rating.objects.filter(userid=id, pname=pname)
+
+            #If the user has changed the rating
+            if len(obj1)!=0:
+                obj2 = Rating.objects.get(userid=id,pname=pname)
+                rating = obj2.rating
             totalitem = len(Cart.objects.filter(user=request.user))
             item_already_in_cart = Cart.objects.filter(Q(product=product.id) & Q(user=request.user)).exists()
-
+            ordered = OrderPlaced.objects.filter(Q(product=product.id) & Q(user=request.user)).exists()
+            
         return render(request, 'app/productdetail.html',
-        {'product': product, 'item_already_in_cart': item_already_in_cart,'totalitem': totalitem})
+        {'product': product, 'ordered': ordered,'rating': int(rating),'item_already_in_cart': item_already_in_cart,'totalitem': totalitem})
+
+
+    def post(self, request, pk):
+        if request.method=='POST':
+            product = Product.objects.get(pk=pk)
+            pname = product.title
+            pcategory = product.category
+            rating=request.POST.get('rate')
+            # print(rating)
+            # print('8888888888888888888888888888')
+            
+            if request.user.is_authenticated:
+                id = request.user.id
+                obj1 = Rating.objects.filter(userid=id, pname=pname)
+
+                #If the user has changed the rating
+                if len(obj1)!=0:
+                    Rating.objects.filter(userid=id,pname=pname,p_category=pcategory).update(rating=rating)
+                #User is rating for first time
+                else:   
+                    obj1=Rating(userid=id,pname=pname,rating=rating,p_category=pcategory)
+                    obj1.save()
+
+            return render(request, 'app/product_rating.html')
+
+
+
+
 
 @login_required
 def add_to_cart(request): 
