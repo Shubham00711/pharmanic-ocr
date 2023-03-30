@@ -19,6 +19,15 @@ import requests
 import glob
 from unidecode import unidecode
 from django.conf import settings
+from sklearn.decomposition import TruncatedSVD
+from typing import Dict, Text
+import numpy as np
+import pandas as pd
+import tensorflow as tf
+import tensorflow_datasets as tfds
+import tensorflow_recommenders as tfrs
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # def home(request):
 # return render(request, 'app/home.html')
@@ -124,9 +133,131 @@ class ProductView(View):
         covid_essentials = Product.objects.filter(category='CE')
         personal_care = Product.objects.filter(category='PC')
         healthcare = covid_essentials | personal_care
+
+        recomm_products_names = collaborativeFiltering()
+        print(recomm_products_names)
+        recomm_products = Product.objects.filter(title__in=recomm_products_names)
+        print(recomm_products)
+        # print(fetch_data())
         if request.user.is_authenticated:
             totalitem = len(Cart.objects.filter(user=request.user))
-        return render(request, 'app/home.html', {'tablets_capsules': tablets_capsules, 'supplements': supplements, 'general': general, 'herbs': herbs, 'health_drinks': health_drinks, 'ayurvedic': ayurvedic, 'covid_essentials': covid_essentials, 'personal_care': personal_care, 'healthcare': healthcare,'totalitem': totalitem})
+        return render(request, 'app/home.html', {'recomm_products': recomm_products, 'tablets_capsules': tablets_capsules, 'supplements': supplements, 'general': general, 'herbs': herbs, 'health_drinks': health_drinks, 'ayurvedic': ayurvedic, 'covid_essentials': covid_essentials, 'personal_care': personal_care, 'healthcare': healthcare,'totalitem': totalitem})
+
+def fetch_data():
+    # products = pd.DataFrame(list(Product.objects.all().values()))
+    carts = pd.DataFrame(list(CartCount.objects.all().values()))
+    views = pd.DataFrame(list(ViewCount.objects.all().values()))
+    # ratings = pd.DataFrame(list(Rating.objects.all().values()))
+    # ratings['userid'] = ratings['userid'].apply(str)
+    # ratings['rating'] = ratings['rating'].astype(float)
+    data = preprocess(ratings,products,userid)
+    popular_cart_products, popular_view_products = cart_view_prediction(carts, views)
+    recommended_products_ratings = []
+    for i in range(0, data.shape[0]):
+        recommended_products_ratings.append(data[i].numpy().decode())
+
+    recommended_products_util = common_recommended_products(recommended_products_ratings, popular_cart_products)
+    recommended_products = common_recommended_products(recommended_products_util, popular_view_products)
+
+    recommended_products = recommended_products + recommended_products_util
+    recommended_products = recommended_products + recommended_products_ratings
+
+    if len(recommended_products) > 5:
+        extra_elements = len(recommended_products) - 5
+        del recommended_products[-extra_elements]
+    
+    return recommended_products
+
+def common_recommended_products(list1, list2):
+    return list(set(list1) & set(list2))
+
+
+def cart_view_prediction(carts, views):
+    popular_cart_products = carts.sort_values(by=['count'], ascending=False)
+    popular_view_products = views.sort_values(by=['count'], ascending=False)
+    return popular_cart_products, popular_view_products
+
+# For new users
+def collaborativeFiltering():
+    ratings = pd.DataFrame(Rating.objects.all().values())
+    carts = pd.DataFrame(CartCount.objects.all().values())
+    popular_cart_products = carts.sort_values(by=['count'], ascending=False)
+    views = pd.DataFrame(ViewCount.objects.all().values())
+    popular_view_products = views.sort_values(by=['count'], ascending=False)
+    
+    # print(ratings)
+    ratings_with_id = ratings[['userid', 'pname', 'rating']]
+    # Need to find product_id using pname
+    pname = ratings['pname']
+    # print(list(pname))
+    p_id = []
+    for i in pname:
+        id = Product.objects.get(title = i).id
+        p_id.append(id)
+    # print(p_id)
+    ratings_with_id['product_id'] = p_id
+    ratings_utility_matrix = ratings_with_id.pivot_table(values='rating', index='userid', columns='product_id', fill_value=0)
+    X = ratings_utility_matrix.T
+    print(ratings.userid)
+    svd = TruncatedSVD(n_components=len(np.unique(ratings.userid)))
+    decomposed_matrix = svd.fit_transform(X)
+    correlation_matrix = np.corrcoef(decomposed_matrix)
+    for product_ in p_id:
+        product_titles = list(X.index)
+        product_id = product_titles.index(product_)
+        correlation_product_id = correlation_matrix[product_id]
+        recommend = list(X.index[correlation_product_id > 0.90])
+        recommend.remove(product_)
+        
+    
+    recommended_prod = []
+    for i in recommend:
+        recommended_prod.append(Product.objects.get(id=i).title)
+
+
+    # print(recommend)
+    print("*****************************************************************************************************")
+    print(decomposed_matrix)
+    print("*****************************************************************************************************")
+    print(X)
+    
+    corr = sns.heatmap(decomposed_matrix)
+    plt.savefig("corr.png")
+
+
+    cart_recomm = popular_cart_products.pname.to_list()
+    # print(cart_recomm)
+
+    view_recomm = popular_view_products.pname.to_list()
+    # print(view_recomm)
+
+    recommended_products = recommended_prod[:4] 
+
+    k = 0
+    for i in cart_recomm:
+        if k == 3:
+            break
+        if i not in recommended_products:
+            recommended_products.append(i)
+            k += 1
+
+    n = 0
+    for i in view_recomm:
+        if n == 3:
+            break
+        if i not in recommended_products:
+            recommended_products.append(i)
+            n += 1
+
+    return recommended_products
+
+
+
+
+
+
+
+
 
 
 # def product_detail(request):
