@@ -28,6 +28,8 @@ import tensorflow_datasets as tfds
 import tensorflow_recommenders as tfrs
 import seaborn as sns
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('agg')
 
 # def home(request):
 # return render(request, 'app/home.html')
@@ -222,7 +224,9 @@ def collaborativeFiltering():
     print(X)
     
     corr = sns.heatmap(decomposed_matrix)
+
     plt.savefig("corr.png")
+    plt.close()
 
 
     cart_recomm = popular_cart_products.pname.to_list()
